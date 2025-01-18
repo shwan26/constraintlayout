@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.example.exercise9_1.ui.theme.Exercise91Theme
@@ -36,7 +37,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             Exercise91Theme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Exercise2(
+                    Exercise3(
 
                         modifier = Modifier.padding(innerPadding)
                     )
@@ -111,12 +112,119 @@ fun Exercise2(modifier: Modifier) {
             bottom.linkTo(horizontalGuideLine)
         }.background(Color.Green).wrapContentSize(Alignment.Center))
         Text(text = "C", modifier = Modifier.constrainAs(textC) {
+            width = Dimension.fillToConstraints
+            height = Dimension.fillToConstraints
             start.linkTo(startGuideLine)
             end.linkTo(endGuideLine)
             top.linkTo(horizontalGuideLine)
-        })
+            bottom.linkTo(bottomGuideLine)
+        }.background(Color.Blue).wrapContentSize(Alignment.Center))
     }
 }
+
+@Composable
+fun Exercise3(modifier: Modifier) {
+    ConstraintLayout(modifier = modifier.fillMaxSize()) {
+        val(spreadTitle, spreadA, spreadB, spreadC,
+            spreadInsideTitle, spreadInsideA, spreadInsideB, spreadInsideC,
+            weightTitle, weightA, weightB, weightC,
+            packedTitle, packedA, packedB, packedC) = createRefs()
+        createHorizontalChain(spreadA,spreadB,spreadC, chainStyle = ChainStyle.Spread)
+
+        Text(text="Spread",
+            modifier = Modifier.constrainAs(spreadTitle){
+                top.linkTo(parent.top, 16.dp)
+                start.linkTo(parent.start, 16.dp)
+            })
+        Text(text="A",
+            modifier = Modifier.constrainAs(spreadA){
+                top.linkTo(spreadTitle.bottom, 16.dp)
+            }.size(80.dp).background(Color.Yellow).wrapContentSize(Alignment.Center))
+        Text(text="B",
+            modifier = Modifier.constrainAs(spreadB){
+                top.linkTo(spreadTitle.bottom, 16.dp)
+            }.size(80.dp).background(Color.Blue).wrapContentSize(Alignment.Center))
+        Text(text="C",
+            modifier = Modifier.constrainAs(spreadC){
+                top.linkTo(spreadTitle.bottom, 16.dp)
+            }.size(80.dp).background(Color.Green).wrapContentSize(Alignment.Center))
+
+        //spread Inside
+        createHorizontalChain(spreadInsideA,spreadInsideB,spreadInsideC,
+            chainStyle = ChainStyle.SpreadInside)
+        Text(text="Spread Inside",
+            modifier = Modifier.constrainAs(spreadInsideTitle){
+                top.linkTo(spreadA.bottom, 16.dp)
+                start.linkTo(parent.start, 16.dp)
+            })
+        Text(text="A",
+            modifier = Modifier.constrainAs(spreadInsideA){
+                top.linkTo(spreadInsideTitle.bottom, 16.dp)
+            }.size(80.dp).background(Color.Yellow).wrapContentSize(Alignment.Center))
+        Text(text="B",
+            modifier = Modifier.constrainAs(spreadInsideB){
+                top.linkTo(spreadInsideTitle.bottom, 16.dp)
+            }.size(80.dp).background(Color.Blue).wrapContentSize(Alignment.Center))
+        Text(text="C",
+            modifier = Modifier.constrainAs(spreadInsideC){
+                top.linkTo(spreadInsideTitle.bottom, 16.dp)
+            }.size(80.dp).background(Color.Green).wrapContentSize(Alignment.Center))
+
+        //spread with weight
+        createHorizontalChain(weightA,weightB,weightC,
+            chainStyle = ChainStyle.Spread)
+        Text(text="Weight",
+            modifier = Modifier.constrainAs(weightTitle){
+                top.linkTo(spreadInsideA.bottom, 16.dp)
+                start.linkTo(parent.start, 16.dp)
+            })
+        Text(text="A",
+            modifier = Modifier.constrainAs(weightA){
+                width = Dimension.fillToConstraints
+                horizontalChainWeight = 1f
+                top.linkTo(weightTitle.bottom, 16.dp)
+            }.size(80.dp).background(Color.Yellow).wrapContentSize(Alignment.Center))
+        Text(text="B",
+            modifier = Modifier.constrainAs(weightB){
+                width = Dimension.fillToConstraints
+                horizontalChainWeight = 2f
+                top.linkTo(weightTitle.bottom, 16.dp)
+            }.size(80.dp).background(Color.Blue).wrapContentSize(Alignment.Center))
+        Text(text="C",
+            modifier = Modifier.constrainAs(weightC){
+                width = Dimension.fillToConstraints
+                horizontalChainWeight = 3f
+                top.linkTo(weightTitle.bottom, 16.dp)
+            }.size(80.dp).background(Color.Green).wrapContentSize(Alignment.Center))
+
+        //spread with packed
+        createHorizontalChain(packedA,packedB,packedC,
+            chainStyle = ChainStyle.Packed)
+        Text(text="Packed",
+            modifier = Modifier.constrainAs(packedTitle){
+                top.linkTo(weightA.bottom, 16.dp)
+                start.linkTo(parent.start, 16.dp)
+            })
+        Text(text="A",
+            modifier = Modifier.constrainAs(packedA){
+
+                top.linkTo(packedTitle.bottom, 16.dp)
+            }.size(80.dp).background(Color.Yellow).wrapContentSize(Alignment.Center))
+        Text(text="B",
+            modifier = Modifier.constrainAs(packedB){
+
+                top.linkTo(packedTitle.bottom, 16.dp)
+            }.size(80.dp).background(Color.Blue).wrapContentSize(Alignment.Center))
+        Text(text="C",
+            modifier = Modifier.constrainAs(packedC){
+
+                top.linkTo(packedTitle.bottom, 16.dp)
+            }.size(80.dp).background(Color.Green).wrapContentSize(Alignment.Center))
+
+
+    }
+}
+
 
 @Preview(showBackground = true)
 @Composable
